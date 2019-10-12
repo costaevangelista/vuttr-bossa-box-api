@@ -1,0 +1,285 @@
+FORMAT: 1A
+
+# API VULTTR - Resources
+A documentação desta API demonstra como utilizar os recursos e suas ações, para fornecer o uso correto do recurso.
+
+# Group Resources
+
+## Tools [/tools]
+
+### Listar Todas as Ferramentas [GET]
+Listagem de todos as Ferramentas do sistema
++ Response 200 (application/json)
+    + Headers
+
+            Accept: application/json
+
+    + Body
+
+            [
+                {
+                    id: 1, // ou qualquer outro identificador
+                    title: "Notion",
+                    link: "https://notion.so",
+                    description: "All in one tool to organize teams and ideas. Write, plan, collaborate, and get organized. ",
+                    tags: [
+                        "organization",
+                        "planning",
+                        "collaboration",
+                        "writing",
+                        "calendar"
+                    ]
+                },
+                {
+                    id: 2,
+                    title: "json-server",
+                    link: "https://github.com/typicode/json-server",
+                    description: "Fake REST API based on a json schema. Useful for mocking and creating APIs for front-end devs to consume in coding challenges.",
+                    tags: [
+                        "api",
+                        "json",
+                        "schema",
+                        "node",
+                        "github",
+                        "rest"
+                    ]
+                },
+            ]
+
+
+### Filtrar Ferramentas por Tag [GET /tools?tag=node]
+Filtrar Ferramentas pela tag válida
++ Response 200 (application/json)
+
+        + Parameters
+            + tag (optional, string) - Tag deve ser válida
+
+    + Body
+
+            [
+                {
+                    id: 2,
+                    title: "json-server",
+                    link: "https://github.com/typicode/json-server",
+                    description: "Fake REST API based on a json schema. Useful for mocking and creating APIs for front-end devs to consume in coding challenges.",
+                    tags: [
+                        "api",
+                        "json",
+                        "schema",
+                        "node",
+                        "github",
+                        "rest"
+                    ]
+                },
+            ]
+
+
+## Criar Tool [POST /tools]
+Criar um novo Tool
++ Request (application/json)
+
+        {
+            "title": "hotel",
+            "link": "https://github.com/typicode/hotel",
+            "description": "Local app manager. Start apps within your browser, developer tool with local .localhost domain and https out of the box.",
+            "tags":["node", "organizing", "webapps", "domain", "developer", "https", "proxy"]
+        }
+
++ Response 201 (application/json)
+
+    + Body
+
+            {
+                "title": "hotel",
+                "link": "https://github.com/typicode/hotel",
+                "description": "Local app manager. Start apps within your browser, developer tool with local .localhost domain and https out of the box.",
+                "tags":["node", "organizing", "webapps", "domain", "developer", "https", "proxy"],
+                 "id":5
+            }
+
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "link": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "description": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "required": true
+                        }
+                    }
+                }
+            }
+
++ Response 404 (application/json)
+Retorna os erros de validação
+     + Body
+
+            {
+                [error]
+            }
+
+
+
+## Delete Tool [DELETE /tools/1]
+Remover um Tool do sistema
+    + Parameters
+        + id:1 (number, required) - ID do Tool
+
++ Response 204
+
++ Response 404 (application/json)
+     + Body
+
+            {
+                error: "Tool selected doesnot exists"
+            }
+
+
+## Users [/users]
+
+### Listar todos os users [GET]
+Listagem de todos os usuários
++ Response 200 (application/json)
+    + Headers
+
+            Accept: application/json
+
+    + Body
+
+            [
+                {
+                    "_id": "5d9d037e6f80aa001f8e42cd",
+                    "name": "Abel Gomes",
+                    "email": "costaevangelista@live.com"
+                },
+                {
+                    "_id": "5d9d037e6f80aa001f8e4sw2",
+                    "name": "Carlos Gomes",
+                    "email": "carlos@live.com"
+                }
+            ]
+
+
+### Criar User [POST /users]
+Criação de um novo usuário
++ Request (application/json)
+
+        {
+            "name": "Abel Gomes",
+            "email": "costaevangelista@live.com",
+            "password": "secret",
+        }
+
++ Response 201 (application/json)
+
+    + Body
+
+             {
+                "_id": "5d9d037e6f80aa001f8e42cd",
+                "name": "Abel Gomes",
+                "email": "costaevangelista@live.com",
+                "password": "$2b$08$pXAqdaLasjuS7bqR6TgUFuYK8BSqAmEBjgbGDU.EW9cfsiIuTB13m",
+            }
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "email": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "password": {
+                        "type": "string",
+                        "required": true
+                    }
+                }
+            }
+
++ Response 404 (application/json)
+Retorna os erros de validação
+     + Body
+
+            {
+                [error]
+            }
+
+
+## Auth / Sessions [/sessions]
+
+### Authenticate user [POST]
+Autenticação de usuários com credenciais válidas
++ Request (application/json)
+
+        {
+            "email": "costaevangelista@live.com",
+            "password": "secret",
+        }
+
++ Response 200 (application/json)
+    + Headers
+
+            Accept: application/json
+
+    + Body
+
+            [
+                {
+                   token: "dsadasdasdsdasd"
+                }
+            ]
++ Response 401 (application/json)
+Retorna os erros de validação
+     + Body
+
+            {
+                message: "Invalid email/password!"
+            }
+
+
+## Dashboard  [/dashboard]
+
+### Dashboard private Auth [GET]
+Rota privada para usuários logados com token válido
++ Request (application/json)
+    + Headers
+
+            Authorization: 'Bearer token3CtXbc'
+
++ Response 200 (text/plain)
+
+        Welcome - Sysvuttr!
+
++ Response 401 (application/json)
+Retorna os erros de validação
+     + Body
+
+            {
+                message: "Token not provided / Token Invalid"
+            }
+
+
+
+
+
+
+
+

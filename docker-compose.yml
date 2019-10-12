@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+  app:
+    container_name: NODEJS_SERVER_SYSVUTTR
+    build: .
+    command: npm start
+    ports:
+      - "3000:3000"
+    links:
+      - mongo
+    volumes:
+      - .:/usr/src/app
+  mongo:
+    container_name: MONGODB_SYSVUTTR
+    image: "mongo"
+    ports:
+      - "27017:27017"
+    volumes:
+      - .:/usr/data/db
